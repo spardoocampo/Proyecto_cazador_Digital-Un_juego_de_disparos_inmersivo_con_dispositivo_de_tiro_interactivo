@@ -34,6 +34,8 @@ Pulsador.
 Para el diseño de la carcasa se planeo un arma no letal fisicamente, para no incentivar el uso de armas en la sociedad, asi que con una ardua investigacion se obtuvo un modelo 3D de la pistola portal de Rick and Morty de accceso publico y con licencia libre.
 
 Se realizo un diseño en wokwi que se observa en la siguiente imagen.
+![Diagrama]([wireless_device/Diagrama final.png](https://github.com/spardoocampo/Proyecto_cazador_Digital-Un_juego_de_disparos_inmersivo_con_dispositivo_de_tiro_interactivo/blob/a23afaf25911fb1466389772fc16c3bf43451953/wireless_device/Diagrama%20final.png))
+
 
 El mando inalámbrico utilizado en el proyecto está diseñado para interactuar con el juego Cazador digital(cazapatos) y permitir al jugador apuntar y disparar a los patos en la pantalla. Está construido alrededor de una placa ESP32, que actúa como el microcontrolador principal y se encarga de la comunicación inalámbrica con el juego.
 

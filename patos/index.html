@@ -1,0 +1,649 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+        <script src="https://cdn.babylonjs.com/ammo.js"></script>
+        <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>
+        <script src="https://cdn.babylonjs.com/cannon.js"></script>
+        <script src="https://cdn.babylonjs.com/Oimo.js"></script>
+        <script src="https://cdn.babylonjs.com/earcut.min.js"></script>
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://cdn.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://cdn.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+            
+            #canvasZone {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+<body>
+	<div>
+		<div><button id="connectDevice" name="connectDevice">Connect BT Device</button></div>
+	    <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
+	</div>
+	<script src="btdevice.js"></script>
+    <script>
+		const mydevice = new BTDevice();
+		window.onload = function() {
+			// Connect / Disconnect button
+			connectDevice.addEventListener("click", () => {
+				mydevice.init( function(status){
+					if (status) {
+						connectDevice.innerHTML = "Disconnect BT Device";
+					} else {
+						connectDevice.innerHTML = "Connect BT Device";
+					}
+				});
+			});
+		}
+    </script>
+	
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var totalPoints = 0;
+var pointsText;
+var timeStamp = 0;
+var timeStampForDuck1 = -1;
+var timeStampForDuck2 = -1;
+        
+var gameStarted = false;
+var gameOver = false;
+
+// Objeto rifle
+var riffle;
+var bullet;
+var bulletActive = false;
+
+
+// Crea todas las animaciones
+var anim1p, anim1r;
+var anim2p, anim2r;
+var anim3p, anim3r;
+var anim4p, anim4r;
+const maxAnimFrames = 200;
+const maxNumAnim = 4;
+var animKill;
+
+//Sonidos
+var gunshot;
+
+var createAllAnimations = function() {
+    // Movimiento 1: Pato de la izquierda a la derecha
+    anim1p = new BABYLON.Animation("anim1p", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    anim1r = new BABYLON.Animation("anim1r", "rotation", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    const anim1r_keys = [];
+    const anim1p_keys = [];
+    anim1p_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(-10, -10, -30)
+    });
+    anim1p_keys.push({
+        frame: maxAnimFrames,
+        value: new BABYLON.Vector3(10, 10, 80)
+    });
+    anim1p.setKeys(anim1p_keys);
+    anim1r_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(0, Math.PI, 0)
+    });
+    anim1r_keys.push({
+        frame: maxAnimFrames,
+        value: new BABYLON.Vector3(0, Math.PI, -Math.PI/4)
+    });
+    anim1r.setKeys(anim1r_keys);
+    
+    // Movimiento 2: Pato de la derecha a izquierda
+    anim2p = new BABYLON.Animation("anim2p", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    anim2r = new BABYLON.Animation("anim2r", "rotation", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    const anim2r_keys = [];
+    const anim2p_keys = [];
+    anim2p_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(10, -10, -30)
+    });
+    anim2p_keys.push({
+        frame: 150,
+        value: new BABYLON.Vector3(-10, 10, 80)
+    });
+    anim2p.setKeys(anim2p_keys);
+    anim2r_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(0, Math.PI, 0)
+    });
+    anim2r_keys.push({
+        frame: maxAnimFrames,
+        value: new BABYLON.Vector3(0, Math.PI, Math.PI/4)
+    });
+    anim2r.setKeys(anim2r_keys);
+    
+    // Movimiento 3: Pato de atrás hacia el frente
+    anim3p = new BABYLON.Animation("anim3p", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    anim3r = new BABYLON.Animation("anim3r", "rotation", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    const anim3r_keys = [];
+    const anim3p_keys = [];
+    anim3p_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(0, 0, -30)
+    });
+    anim3p_keys.push({
+        frame: maxAnimFrames/2,
+        value: new BABYLON.Vector3(0, 0, 20)
+    });
+    anim3p_keys.push({
+        frame: maxAnimFrames,
+        value: new BABYLON.Vector3(0, 10, 100)
+    });
+    anim3p.setKeys(anim3p_keys);
+    anim3r_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(0, Math.PI, 0)
+    });
+    anim3r_keys.push({
+        frame: maxAnimFrames,
+        value: new BABYLON.Vector3(0, Math.PI*0.8, Math.PI/8)
+    });
+    anim3r.setKeys(anim3r_keys);
+	
+	// Movimiento 4: Pato desde atrás y hacia el frente
+    anim4p = new BABYLON.Animation("anim4p", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    anim4r = new BABYLON.Animation("anim4r", "rotation", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    const anim4r_keys = [];
+    const anim4p_keys = [];
+    anim4p_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(10, 10, 80)
+    });
+    anim4p_keys.push({
+        frame: maxAnimFrames/2,
+        value: new BABYLON.Vector3(10, 0, 20)
+    });
+    anim4p_keys.push({
+        frame: maxAnimFrames,
+        value: new BABYLON.Vector3(0, -10, -30)
+    });
+    anim4p.setKeys(anim4p_keys);
+    anim4r_keys.push({
+        frame: 0,
+        value: new BABYLON.Vector3(0, 0, 0)
+    });
+    anim4r_keys.push({
+        frame: maxAnimFrames,
+        value: new BABYLON.Vector3(0, Math.PI/4, 0)
+    });
+    anim4r.setKeys(anim4r_keys);
+	
+	//Movimiento cuando se mata el pato
+	animKill = new BABYLON.Animation("killAnim", "rotation.x", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+    const killKeys = [];
+    killKeys.push({
+        frame: 0,
+        value: 0
+    });
+    killKeys.push({
+        frame: 10,
+        value: Math.PI/2
+    });
+    killKeys.push({
+        frame: 20,
+        value: Math.PI
+    });
+    killKeys.push({
+        frame: 30,
+        value: 3*Math.PI/2
+    });
+    animKill.setKeys(killKeys);
+}
+
+// Crea una ruta de animación para el pato
+var animateDuck = function( pathNum, duck ) {
+    var animationGroup = new BABYLON.AnimationGroup("duck_path"+pathNum);
+    
+	switch( pathNum ) {
+        case 1:
+            animationGroup.addTargetedAnimation(anim1p, duck);
+            animationGroup.addTargetedAnimation(anim1r, duck);
+            break;
+    
+        case 2:
+            animationGroup.addTargetedAnimation(anim2p, duck);
+            animationGroup.addTargetedAnimation(anim2r, duck);
+            break;
+
+        case 3:
+            animationGroup.addTargetedAnimation(anim3p, duck);
+            animationGroup.addTargetedAnimation(anim3r, duck);
+            break;
+
+        case 4:
+            animationGroup.addTargetedAnimation(anim4p, duck);
+            animationGroup.addTargetedAnimation(anim4r, duck);
+            break;
+
+        default:
+            return;
+    }    
+	duck.scaling = new BABYLON.Vector3(2, 2, 2);
+    animationGroup.play(false);
+}
+
+
+// Find child mesh inside an object
+var findMesh = (obj, childName) => {
+    return obj.getChildMeshes(false, (child) => {
+        if (child.name == childName) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    })[0];
+}
+
+//Crea los botones de la interfaz gráfica
+var buttonTile = function ( buttonName, colorName, x, y, action ) {
+    var buttonX = BABYLON.GUI.Button.CreateSimpleButton("but"+buttonName, buttonName);
+    buttonX.width = "60px"
+    buttonX.height = "30px";
+    buttonX.color = "white";
+    buttonX.cornerRadius = 15;
+    buttonX.background = colorName;
+    buttonX.left = x;
+    buttonX.top = y;
+    buttonX.onPointerUpObservable.add(action);
+    return buttonX;
+}   
+
+
+//Funciones que se invocan cuando se presiona una tecla 
+
+	
+
+var pressButtonRotX_Dn = function ( scene ) {
+    if (!gameStarted) {
+        startGame(scene);
+        return;
+    }
+    riffle.rotation.x -= Math.PI/1000;
+    if (riffle.rotation.x < Math.PI/4) {
+        riffle.rotation.x = Math.PI/4;
+    }
+}
+
+var pressButtonRotY_Up = function ( scene ) {
+    if (!gameStarted) {
+        startGame(scene);
+        return;
+    }
+    riffle.rotation.y += Math.PI/1000;
+    if (riffle.rotation.y > Math.PI/4) {
+        riffle.rotation.y = Math.PI/4;
+    }
+}
+
+var pressButtonRotY_Dn = function ( scene ) {
+    if (!gameStarted) {
+        startGame(scene);
+        return;
+    }
+    riffle.rotation.y -= Math.PI/1000;
+    if (riffle.rotation.y < -Math.PI/4) {
+        riffle.rotation.y = -Math.PI/4;
+    }
+}
+
+
+var pressButtonFire = function ( scene ) {
+    if (!gameStarted) {
+        startGame(scene);
+        return;
+    }
+    if (!bulletActive) {
+        bulletActive = true;
+        bullet = findMesh(riffle, "bullet");
+		gunshot.play( );
+        setTimeout(async () => {
+            const anim = scene.beginAnimation(bullet, 0, 20, false);
+            await anim.waitAsync();
+            bullet.position.y = 0;
+            bulletActive = false;
+        });
+    }
+}
+
+// Inicia la animación cuando el pato se muere
+
+var killDuck = function ( duck, scene ) {    
+    var animationGroup = new BABYLON.AnimationGroup("duck_kill");
+    animationGroup.addTargetedAnimation(animKill, duck);
+    animationGroup.onAnimationEndObservable.add(function(){
+            duck.scaling = new BABYLON.Vector3(0.01, 0.01, 0.01);
+        });
+    animationGroup.play(false);
+}
+
+
+// Inicia el juego
+var startGame = function ( scene ) {
+    // Update variables
+    timeStamp = 0;
+	timeStampForDuck1 = -1;
+    timeStampForDuck2 = -1;
+    totalPoints = 0;
+    pointsText.text = "Points: 0";
+	bulletActive = false;
+    // Update status
+    gameStarted = true;
+    gameOver = false;
+}
+
+
+const createScene = function () {
+    const scene = new BABYLON.Scene(engine);
+
+	// Connect to device
+    const dsm = new BABYLON.DeviceSourceManager(engine);
+  
+    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 50, new BABYLON.Vector3(0, 0, 0));
+    camera.attachControl(canvas, true);
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+ 
+	// Riffle
+    riffle  = BABYLON.MeshBuilder.CreateBox("riffle", {width: 1, height: 1, depth: 1}); 
+    const rRight = BABYLON.MeshBuilder.CreateCylinder("rRight", {height: 30, diameterTop: 1, diameterBottom: 2, tessellation: 8});
+    const rLeft = BABYLON.MeshBuilder.CreateCylinder("rLeft", {height: 30, diameterTop: 1, diameterBottom: 2, tessellation: 8});
+    const rView = BABYLON.MeshBuilder.CreateTorus("rView", {diameter: 2, tickness: 0.2, tessellation: 16});
+    const rRay = BABYLON.MeshBuilder.CreateCylinder("rray", {height: 120, diameterTop: 0.2, diameterBottom: 0.2, tessellation: 4});
+    const rayMat = new BABYLON.StandardMaterial("rayMat", scene);
+    rayMat.alpha = 0.3;
+    rayMat.emissiveColor = new BABYLON.Color3(1, 0, 0);
+    rRay.material = rayMat;
+        
+    rRight.position.x = 0.5;
+    rRight.position.z = 1;
+    rLeft.position.x = -0.5;
+    rLeft.position.z = 1;
+    rView.position.y = 13;
+    rView.position.z = -0.5;
+    rRay.position.y = 60;
+    rRay.position.z = 1;
+    rRight.parent = riffle;
+    rLeft.parent = riffle;
+    rView.parent = riffle;
+    rRay.parent = riffle;
+    riffle.rotation.x = Math.PI/2;
+    riffle.position.z = -30;
+    rRight.isPickable = false;
+    rLeft.isPickable = false;
+    rView.isPickable = false;
+    riffle.isPickable = false;
+
+    //Bullet
+    const bullet = BABYLON.MeshBuilder.CreateCylinder("bullet", {diameter: 0.5, height: 0.5});
+    bullet.position.y = 12;
+    bullet.parent = riffle;
+    const bulletMat = new BABYLON.StandardMaterial("bulletMaterial", scene);
+    bulletMat.emissiveColor = new BABYLON.Color3(0,0,1);
+    bullet.material = bulletMat;
+	bullet.isPickable = false; 
+
+    const bulletAnim = new BABYLON.Animation("bulletAnim", "position.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+    const bulletKeys = [];
+    bulletKeys.push({
+        frame: 0,
+        value: 12
+    });
+    bulletKeys.push({
+        frame: 30,
+        value: 120
+    });
+
+    bulletAnim.setKeys(bulletKeys);
+    bullet.animations.push(bulletAnim);
+
+
+    // Create animations
+    createAllAnimations();    
+
+    //GUI Elements        
+    var guiElements = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    pointsText = new BABYLON.GUI.TextBlock();
+    pointsText.text = "Press any key to start";
+    pointsText.color = "white";
+    pointsText.fontSize = 24;
+    pointsText.top = "-45%";
+    guiElements.addControl(pointsText);    
+
+    guiElements.addControl( buttonTile( "W", "blue", "35%", "35%", function() { pressButtonRotX_Dn(scene); } ) );
+    guiElements.addControl( buttonTile( "A", "blue", "25%", "40%", function() { pressButtonRotY_Dn(scene); }) );
+    guiElements.addControl( buttonTile( "S", "blue", "35%", "45%", function() { pressButtonRotX_Up(scene); }) );
+    guiElements.addControl( buttonTile( "D", "blue", "45%", "40%", function() { pressButtonRotY_Up(scene); }) );
+    guiElements.addControl( buttonTile( "Space", "red", "35%", "40%", function() { pressButtonFire(scene); }) );
+
+    // Load gun shot sound
+    gunshot = new BABYLON.Sound("https://raw.githubusercontent.com/jimarinh/immersiuqube/7739fa10a7afcb69166002d855552667fa51a563/patos/sounds/gunshot.wav");
+        		
+	
+    timeStamp = 0;
+    gameStarted = false;
+    gameOver = false;
+	
+	var duck1;
+    var duck2;
+	var skeleton;
+	
+	
+	
+	
+    BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/jimarinh/immersiuqube/7739fa10a7afcb69166002d855552667fa51a563/patos/", "duck.gltf", scene, function (newMeshes, particleSystems, skeletons) {
+        //Duck 1
+        duck1 = newMeshes[0];
+		skeleton = skeletons[0];
+	    duck1.scaling = new BABYLON.Vector3(2, 2, 2);
+	    duck1.position.z = -50;
+        //Duck 2
+        duck2 = duck1.clone();
+        duck2.position.x = 5;
+        duck2.position.z = -50;
+        //Start ducks' movement
+	    scene.beginAnimation(skeletons[0], 0, 100, true, 1.0);
+		
+        timeStamp = 0;
+        timeStampForDuck1 = -1;
+        timeStampForDuck2 = -1;
+        var pathNum1 = 0;
+        var pathNum2 = 0;
+
+		// Main game loop
+		
+        scene.registerBeforeRender(function () {    
+            if ( timeStamp % (maxAnimFrames+60) == 0 ) {
+                //Determina los movimientos que se emplearán para los patos de forma aleatoria
+                pathNum1 = Math.floor(Math.random() * (maxNumAnim+1));
+                pathNum2 = Math.floor(Math.random() * (maxNumAnim+1));
+                if (pathNum1!=0) {
+                    timeStampForDuck1 = timeStamp + Math.floor(Math.random() * 15);
+                    timeStampForDuck2 = timeStampForDuck1 + 30;
+                } else {
+					duck1.position.z = -50;
+					duck2.position.z = -50;
+				}
+            }
+            if ( timeStamp == timeStampForDuck1 ) {
+                animateDuck( pathNum1, duck1 );
+            }
+            if ( timeStamp == timeStampForDuck2 ) {
+                animateDuck( pathNum2, duck2 );
+            }
+            timeStamp++;
+			
+			//Bullet collision
+            if (bulletActive) {
+                var origin = riffle.position;
+                var m = riffle.getWorldMatrix();
+                var dest = BABYLON.Vector3.TransformCoordinates(bullet.position, m);
+                var direction = dest.subtract(origin);
+                direction = BABYLON.Vector3.Normalize(direction);
+                
+                var ray = new BABYLON.Ray(origin, direction, 100);  
+                var hit = scene.pickWithRay(ray);
+                if (hit.pickedMesh) {
+                    var hitMesh = hit.pickedMesh;
+                    while( hitMesh.parent != null ) {
+                        hitMesh = hitMesh.parent;
+                    }
+                    bulletActive = false;
+                    // Perform kill duck animation
+                    killDuck(hitMesh, scene);
+                    // update points
+                    totalPoints++;
+                    pointsText.text = "Points: " + totalPoints;
+                }
+            }
+			
+			 // Read keyboard
+            if (dsm.getDeviceSource(BABYLON.DeviceType.Keyboard)) {
+                if (dsm.getDeviceSource(BABYLON.DeviceType.Keyboard).getInput(65) == 1) {
+                    pressButtonRotY_Dn(scene);
+                }
+                if (dsm.getDeviceSource(BABYLON.DeviceType.Keyboard).getInput(83) == 1) {
+                    pressButtonRotX_Up(scene);    
+                }
+                if (dsm.getDeviceSource(BABYLON.DeviceType.Keyboard).getInput(68) == 1) {
+                    pressButtonRotY_Up(scene);
+                }
+                if (dsm.getDeviceSource(BABYLON.DeviceType.Keyboard).getInput(87) == 1) {
+                    pressButtonRotX_Dn(scene);
+                }
+                if (dsm.getDeviceSource(BABYLON.DeviceType.Keyboard).getInput(32) == 1) {
+                    pressButtonFire(scene);
+                }
+            }
+			
+function moverMirax(valor){
+const cantm = Math.floor(valor * 100);
+if (cantm > 0){
+pressButtonFire(scene).repeat(cantm);
+}else if (cantm < 0){
+for(let i = 0; i< Math.abs(cantm); i++){
+}}
+}
+
+
+
+mydevice.read(function(str) {
+  const obj = JSON.parse(str, function(key, value) {
+    if (key == "fire" && value == "1") {
+      pressButtonFire(scene);
+    } 
+
+    if (key == "gx") {
+      if (value < 0) {
+          pressButtonRotY_Up(scene);
+        }
+      
+      if (value > 0) {
+          pressButtonRotY_Dn(scene);
+        }
+    }
+      
+    if (key == "gy") {
+      if (value < 0) {
+          pressButtonRotX_Up(scene);
+      }
+      if (value > 0) {
+          pressButtonRotX_Dn(scene);
+        }
+    }
+  });
+});
+
+
+
+
+			
+		});
+	});
+
+
+    // Activate camera
+    /*
+    var layer = new BABYLON.Layer("background", null, scene, true);
+    BABYLON.VideoTexture.CreateFromWebCam(scene, function (videoTexture) {
+        videoTexture.vScale = -1.0;
+        videoTexture.uScale = canvas.width / canvas.height * videoTexture.getSize().height / videoTexture.getSize().width;
+        layer.texture = videoTexture;
+    }, { maxWidth: 640, maxHeight: 480 });
+    */
+
+    return scene;
+
+};
+                window.initFunction = async function() {
+                    
+                    
+                    
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+
+                    window.engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        startRenderLoop(engine, canvas);
+        window.scene = createScene();};
+        initFunction().then(() => {sceneToRender = scene                    
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>

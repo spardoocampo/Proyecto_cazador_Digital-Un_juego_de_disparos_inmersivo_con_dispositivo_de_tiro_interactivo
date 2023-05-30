@@ -4,7 +4,7 @@ Cazador digital, un juego de disparos inmersivo con dispositivo de tiro interact
 ## 2. Proposito del juego:
 El propósito del juego "Cazador Digital: Un juego de disparos inmersivo con dispositivo de tiro interactivo" es brindar a los jugadores una experiencia divertida y envolvente en la caza de patos utilizando electrónica y juegos en 3D.
 
-El juego tiene como objetivo principal recrear la emoción y la destreza requerida en la caza de patos en un entorno virtual. Al combinar un entorno 3D realista creado con Babylon.js y un dispositivo de tiro interactivo basado en la placa ESP32, se busca proporcionar una experiencia de juego única y más inmersiva que simplemente utilizar un teclado y un ratón.
+El objetivo principal del juego es recrear la emoción y la destreza requerida en la caza de patos en un entorno virtual. Mediante la combinación de un entorno 3D realista creado con Babylon.js y un dispositivo de tiro interactivo basado en la placa ESP32, se busca proporcionar una experiencia de juego única y más inmersiva que simplemente utilizar un teclado y un ratón.
 
 El jugador asume el papel de un cazador digital y utiliza el dispositivo de tiro interactivo para apuntar y disparar a los patos que vuelan en la pantalla. El objetivo es acertar en la mayor cantidad de patos posibles y obtener la puntuación más alta. La precisión, la rapidez de reacción y la habilidad del jugador para apuntar con precisión son factores clave para tener éxito en el juego.
 
@@ -29,10 +29,15 @@ Puedes comparar tu puntuación con las puntuaciones más altas previas o desafia
 
 ## 4. Descripción del dispositivo de captura
 Se realiza el diseño del dispositivo de captura teniendo en cuenta el juego original de duck hunter, asi que se planteó las caracteristicas principales que son un microcontrolador con conectividad wifi, un accionador para el disparo y un sensor para el movimiento, ademas de un indicador de funcionamiento, tiendo esto en mente el grupo de trabajo realizo un metodo de diseño que es la tabla morfologica para asi al final concluir con la lista de dispositivos a usar que son:
+
 Esp32
+
 MPU6050 
+
 LED
+
 Pulsador.
+
 Para el diseño de la carcasa se planeo un arma no letal fisicamente, para no incentivar el uso de armas en la sociedad, asi que con una ardua investigacion se obtuvo un modelo 3D de la pistola portal de Rick and Morty de accceso publico y con licencia libre.
 
 Se realizo un diseño en wokwi que se observa en la siguiente imagen.
@@ -44,7 +49,7 @@ Al final la realizacion se obtuvieron los resultados que se observan en las sigu
 ## Conclusion del dispositivo de captura
 El mando inalámbrico utilizado en el proyecto está diseñado para interactuar con el juego Cazador digital(cazapatos) y permitir al jugador apuntar y disparar a los patos en la pantalla. Está construido alrededor de una placa ESP32, que actúa como el microcontrolador principal y se encarga de la comunicación inalámbrica con el juego.
 
-## El diseño del mando incluye los siguientes componentes y características:
+El diseño del mando incluye los siguientes componentes y características:
 Placa ESP32: Se utiliza como el cerebro del mando inalámbrico. Proporciona capacidad de procesamiento, conectividad Bluetooth para la comunicación con el juego y una variedad de pines de E/S para la conexión de componentes como el MPU6050, un pulsador y un LED.
 
 Sensores de movimiento: Se utilizó un sensor con medicion de aceleracion, giróscopio y temperatura, dicho sensor es el MPU6050 y su coneccion es mediante el protocolo I2C . Este sensor capturan los cambios en la orientación y movimiento del dispositivo de captura, lo que permite al jugador apuntar en el juego.

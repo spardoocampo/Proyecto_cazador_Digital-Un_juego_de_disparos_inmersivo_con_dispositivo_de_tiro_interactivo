@@ -25,7 +25,7 @@ Finalización del juego:
 Una vez que se haya alcanzado el límite de tiempo autoimpuesto o hayas decidido terminar el juego, se mostrará tu puntuación final.
 Puedes comparar tu puntuación con las puntuaciones más altas previas o desafiar a otros jugadores a superar tu récord.
 
-## 4. Descripción de mando
+## 4. Descripción del dispositivo de captura
 Se realiza el diseño del dispositivo de captura teniendo en cuenta el juego original de duck hunter, asi que se planteó las caracteristicas principales que son un microcontrolador con conectividad wifi, un accionador para el disparo y un sensor para el movimiento, ademas de un indicador de funcionamiento, tiendo esto en mente el grupo de trabajo realizo un metodo de diseño que es la tabla morfologica para asi al final concluir con la lista de dispositivos a usar que son:
 Esp32
 MPU6050 
@@ -35,7 +35,9 @@ Para el diseño de la carcasa se planeo un arma no letal fisicamente, para no in
 
 Se realizo un diseño en wokwi que se observa en la siguiente imagen.
 ![Diagrama](https://github.com/spardoocampo/Proyecto_cazador_Digital-Un_juego_de_disparos_inmersivo_con_dispositivo_de_tiro_interactivo/blob/a23afaf25911fb1466389772fc16c3bf43451953/wireless_device/Diagrama%20final.png)
-
+Al final la realizacion se obtuvieron los resultados que se observan en las siguientes imagenes:
+![Foto1](https://github.com/spardoocampo/Proyecto_cazador_Digital-Un_juego_de_disparos_inmersivo_con_dispositivo_de_tiro_interactivo/blob/a31c467857ad6181f4238c57ae0dff7b9c6b3d0e/wireless_device/photo_5168195514225765008_y.png)
+![Foto2](https://github.com/spardoocampo/Proyecto_cazador_Digital-Un_juego_de_disparos_inmersivo_con_dispositivo_de_tiro_interactivo/blob/a31c467857ad6181f4238c57ae0dff7b9c6b3d0e/wireless_device/photo_5168195514225765007_y.png)
 
 El mando inalámbrico utilizado en el proyecto está diseñado para interactuar con el juego Cazador digital(cazapatos) y permitir al jugador apuntar y disparar a los patos en la pantalla. Está construido alrededor de una placa ESP32, que actúa como el microcontrolador principal y se encarga de la comunicación inalámbrica con el juego.
 

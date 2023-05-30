@@ -39,10 +39,10 @@ Al final la realizacion se obtuvieron los resultados que se observan en las sigu
 ![Foto1](https://github.com/spardoocampo/Proyecto_cazador_Digital-Un_juego_de_disparos_inmersivo_con_dispositivo_de_tiro_interactivo/blob/a31c467857ad6181f4238c57ae0dff7b9c6b3d0e/wireless_device/photo_5168195514225765008_y.png)
 ![Foto2](https://github.com/spardoocampo/Proyecto_cazador_Digital-Un_juego_de_disparos_inmersivo_con_dispositivo_de_tiro_interactivo/blob/a31c467857ad6181f4238c57ae0dff7b9c6b3d0e/wireless_device/photo_5168195514225765007_y.png)
 
+## Conclusion del dispositivo de captura
 El mando inalámbrico utilizado en el proyecto está diseñado para interactuar con el juego Cazador digital(cazapatos) y permitir al jugador apuntar y disparar a los patos en la pantalla. Está construido alrededor de una placa ESP32, que actúa como el microcontrolador principal y se encarga de la comunicación inalámbrica con el juego.
 
-El diseño del mando incluye los siguientes componentes y características:
-
+## El diseño del mando incluye los siguientes componentes y características:
 Placa ESP32: Se utiliza como el cerebro del mando inalámbrico. Proporciona capacidad de procesamiento, conectividad Bluetooth para la comunicación con el juego y una variedad de pines de E/S para la conexión de componentes como el MPU6050, un pulsador y un LED.
 
 Sensores de movimiento: Se utilizó un sensor con medicion de aceleracion, giróscopio y temperatura, dicho sensor es el MPU6050 y su coneccion es mediante el protocolo I2C . Este sensor capturan los cambios en la orientación y movimiento del dispositivo de captura, lo que permite al jugador apuntar en el juego.
@@ -50,3 +50,10 @@ Sensores de movimiento: Se utilizó un sensor con medicion de aceleracion, giró
 Boton pulsador (Disparo): El dispositivo de captura tiene un pulsador que se utiliza para activar el disparo dentro del juego. Este pulsador se conectan al pin 2 de E/S de la placa ESP32 y se programan para enviar un dato al juego como bandera cuando se presiona.
 
 Alimentación: El mando puede ser alimentado por una batería recargable interna o utilizar una fuente de alimentación externa.
+
+## Integrantes del proyecto:
+***Sebastian Pardo Ocampo***
+
+***Alexander Cadena***
+
+***Vanesa Cuasapaz***

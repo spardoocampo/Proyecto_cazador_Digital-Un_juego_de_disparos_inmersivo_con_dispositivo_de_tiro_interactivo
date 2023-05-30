@@ -26,6 +26,15 @@ Una vez que se haya alcanzado el límite de tiempo autoimpuesto o hayas decidido
 Puedes comparar tu puntuación con las puntuaciones más altas previas o desafiar a otros jugadores a superar tu récord.
 
 ## 4. Descripción de mando
+Se realiza el diseño del dispositivo de captura teniendo en cuenta el juego original de duck hunter, asi que se planteó las caracteristicas principales que son un microcontrolador con conectividad wifi, un accionador para el disparo y un sensor para el movimiento, ademas de un indicador de funcionamiento, tiendo esto en mente el grupo de trabajo realizo un metodo de diseño que es la tabla morfologica para asi al final concluir con la lista de dispositivos a usar que son:
+Esp32
+MPU6050 
+LED
+Pulsador.
+Para el diseño de la carcasa se planeo un arma no letal fisicamente, para no incentivar el uso de armas en la sociedad, asi que con una ardua investigacion se obtuvo un modelo 3D de la pistola portal de Rick and Morty de accceso publico y con licencia libre.
+
+Se realizo un diseño en wokwi que se observa en la siguiente imagen.
+
 El mando inalámbrico utilizado en el proyecto está diseñado para interactuar con el juego Cazador digital(cazapatos) y permitir al jugador apuntar y disparar a los patos en la pantalla. Está construido alrededor de una placa ESP32, que actúa como el microcontrolador principal y se encarga de la comunicación inalámbrica con el juego.
 
 El diseño del mando incluye los siguientes componentes y características:

@@ -50,6 +50,7 @@ Al final la realizacion se obtuvieron los resultados que se observan en las sigu
 El mando inalámbrico utilizado en el proyecto está diseñado para interactuar con el juego Cazador digital(cazapatos) y permitir al jugador apuntar y disparar a los patos en la pantalla. Está construido alrededor de una placa ESP32, que actúa como el microcontrolador principal y se encarga de la comunicación inalámbrica con el juego.
 
 El diseño del mando incluye los siguientes componentes y características:
+
 Placa ESP32: Se utiliza como el cerebro del mando inalámbrico. Proporciona capacidad de procesamiento, conectividad Bluetooth para la comunicación con el juego y una variedad de pines de E/S para la conexión de componentes como el MPU6050, un pulsador y un LED.
 
 Sensores de movimiento: Se utilizó un sensor con medicion de aceleracion, giróscopio y temperatura, dicho sensor es el MPU6050 y su coneccion es mediante el protocolo I2C . Este sensor capturan los cambios en la orientación y movimiento del dispositivo de captura, lo que permite al jugador apuntar en el juego.

@@ -10,21 +10,37 @@ El jugador asume el papel de un cazador digital y utiliza el dispositivo de tiro
 
 ## 3. Instrucciones del juego:
 El objetivo del juego es cazar la mayor cantidad de patos posible y obtener la puntuación más alta.
+
 Utiliza el dispositivo de tiro interactivo conectado a la placa ESP32 para apuntar y disparar a los patos en la pantalla.
+
 Asegúrate de tener el dispositivo de tiro correctamente conectado mediante bluetooth al dispositivo el cual se va a ejecutar el juego(computador, celular, tablet, etc.).
+
 Enciende el juego y asegúrate de que tanto la pantalla como el dispositivo de tiro estén funcionando correctamente.
+
 Se debe emparejar el dispositivo bluetooth al dispositivo en el que se piensa jugar, luego al iniciar el juego deberá clicar al botón ubicado en la parte superior izquierda para buscar el dispositivo bluetooth que es el dispositivo de captura, cuando el dispositivo de captura se encienda el led interno significa que se inicializó de manera correcta el módulo MPU6050.
-Interacción con el juego:
+
+**Interacción con el juego:**
+
 Observa la pantalla, donde los patos se moverán y volarán en el entorno 3D.
+
 Mueve el dispositivo de tiro en la dirección deseada para apuntar a los patos en la pantalla.
+
 Utiliza el botón del dispositivo de tiro, para activar el disparo y acertar a los patos.
-Puntuación y efectos:
+
+**Puntuación y efectos:**
+
 Cada vez que aciertes a un pato, se sumará un punto a tu puntuación total.
+
 Si fallas un disparo o no aciertas a un pato, no se sumará ni se restará ningún punto.
+
 Disfruta de efectos visuales y de sonido que realzan la experiencia de caza.
+
 El juego está diseñando para tener una duración infinita, así que si quieres batirte a duelo con un compañero se recomienda tener un temporizador y el que obtenga más puntos será el más habilidoso.
-Finalización del juego:
+
+**Finalización del juego:**
+
 Una vez que se haya alcanzado el límite de tiempo autoimpuesto o hayas decidido terminar el juego, se mostrará tu puntuación final.
+
 Puedes comparar tu puntuación con las puntuaciones más altas previas o desafiar a otros jugadores a superar tu récord.
 
 ## 4. Descripción del dispositivo de captura
